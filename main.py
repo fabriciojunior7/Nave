@@ -20,6 +20,8 @@ def main():
     player = nave.Nave(largura, altura)
     gravidade = 0.1
 
+    plano_fundo = pygame.image.load("imagens/background.jpg")
+
     while(True):
         for event in pygame.event.get():
             if(event.type == pygame.QUIT):
@@ -31,11 +33,17 @@ def main():
                 if(event.key == pygame.K_SPACE):
                     player.motorLigado = True
                 if(event.key == pygame.K_d):
-                    player.mover_direita()
+                    player.direita = True
+                if (event.key == pygame.K_a):
+                    player.esquerda = True
 
             if(event.type == pygame.KEYUP):
                 if(event.key == pygame.K_SPACE):
                     player.motorLigado = False
+                if (event.key == pygame.K_d):
+                    player.direita = False
+                if (event.key == pygame.K_a):
+                    player.esquerda = False
 
         #Rodar
         relogio.tick(frames)
@@ -44,8 +52,13 @@ def main():
         player.colisao(largura, altura)
         if(player.motorLigado == True):
             player.voar()
+        if(player.direita == True):
+            player.mover_direita()
+        if (player.esquerda == True):
+            player.mover_esquerda()
         #Desenhas
         tela.fill(cinza)
+        tela.blit(plano_fundo, (0, 0))
         player.pintar(tela)
 
 
