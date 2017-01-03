@@ -14,13 +14,16 @@ def main():
     tela = pygame.display.set_mode((largura, altura))
     pygame.display.set_caption("Navezinha!")
     relogio = pygame.time.Clock()
-    frames = 60
+    frames = 30
     frames_passados = 0
 
     player = nave.Nave(largura, altura)
-    gravidade = 0.1
+    gravidade = 0.25
 
     plano_fundo = pygame.image.load("imagens/background.jpg")
+
+    cameraX = 0
+    cameraY = 0
 
     while(True):
         for event in pygame.event.get():
@@ -30,7 +33,7 @@ def main():
 
             #Teclado
             if(event.type == pygame.KEYDOWN):
-                if(event.key == pygame.K_SPACE):
+                if(event.key == pygame.K_SPACE or event.key == pygame.K_w):
                     player.motorLigado = True
                 if(event.key == pygame.K_d):
                     player.direita = True
@@ -38,7 +41,7 @@ def main():
                     player.esquerda = True
 
             if(event.type == pygame.KEYUP):
-                if(event.key == pygame.K_SPACE):
+                if(event.key == pygame.K_SPACE or event.key == pygame.K_w):
                     player.motorLigado = False
                 if (event.key == pygame.K_d):
                     player.direita = False
@@ -56,9 +59,13 @@ def main():
             player.mover_direita()
         if (player.esquerda == True):
             player.mover_esquerda()
+
+
         #Desenhas
+        cameraX -= player.velocidadeX
+        cameraY -= player.velocidadeY
         tela.fill(cinza)
-        tela.blit(plano_fundo, (0, 0))
+        tela.blit(plano_fundo, (cameraX, cameraY))
         player.pintar(tela)
 
 

@@ -14,11 +14,12 @@ class Nave(pygame.sprite.Sprite):
         self.corpo = self.imagem.get_rect()
         self.corpo.centerx = largura/2
         self.corpo.centery = altura/2
-        self.velocidadeY = 0
         self.velocidadeX = 0
-        self.forcaX = 0.2
-        self.forcaY = 0.2
-        self.arrasto = 0.1
+        self.velocidadeY = 0
+        self.velocidadeYMAX = 3
+        self.forcaX = 0.5
+        self.forcaY = 0.5
+        self.arrasto = 0.05
         self.motorLigado = False
         self.direita = False
         self.esquerda = False
@@ -31,14 +32,15 @@ class Nave(pygame.sprite.Sprite):
 
     def cair(self, gravidade):
         self.velocidadeY += gravidade
-        self.corpo.move_ip(0, self.velocidadeY)
-        if(self.velocidadeX > 0):
+        if (self.velocidadeX > -self.arrasto and self.velocidadeX < self.arrasto):
+            self.velocidadeX = 0
+        elif(self.velocidadeX > 0):
             self.velocidadeX -= self.arrasto
         elif(self.velocidadeX < 0):
             self.velocidadeX += self.arrasto
 
-        self.corpo.move_ip(self.velocidadeX, 0)
-        self.corpo.move_ip(0, self.velocidadeY)
+        #self.corpo.move_ip(self.velocidadeX, 0)
+        #self.corpo.move_ip(0, self.velocidadeY)
 
 
     def mover_direita(self):
@@ -51,19 +53,16 @@ class Nave(pygame.sprite.Sprite):
         #Eixo X
         if(self.corpo.centerx > largura - (self.largura/2)):
             self.corpo.centerx = largura - (self.largura/2)
-            self.velocidadeX = -1
+            self.velocidadeX = -(self.velocidadeX - (self.velocidadeX*0.7))
         elif(self.corpo.centerx < (self.largura/2)):
             self.corpo.centerx = self.largura / 2
-            self.velocidadeX = 1
+            self.velocidadeX = -(self.velocidadeX - (self.velocidadeX*0.7))
         #Eixo Y
         if(self.corpo.centery > altura - (self.altura/2)):
             self.corpo.centery = altura - (self.altura/2)
-            self.velocidadeY = 1
+            self.velocidadeY = -(self.velocidadeY - (self.velocidadeY*0.7))
         elif(self.corpo.centery < (self.altura/2)):
             self.corpo.centery = self.altura / 2
-            self.velocidadeY = -1
-
-    def rodar(self, tela):
-        self.imagem = pygame.transform.rotate(self.imagem, -89)
+            self.velocidadeY = -(self.velocidadeY - (self.velocidadeY*0.7))
 
 
