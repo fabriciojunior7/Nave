@@ -1,10 +1,12 @@
 import pygame, sys
-import nave
+import nave, obstaculos
 
 #Cores
 branco = (255, 255, 255)
 preto = (0, 0, 0)
 cinza = (50, 50, 50)
+num_paredes = 10
+paredes = []
 
 def main():
 
@@ -20,7 +22,10 @@ def main():
     player = nave.Nave(largura, altura)
     gravidade = 0.25
 
-    plano_fundo = pygame.image.load("imagens/background.jpg")
+    plano_fundo = pygame.image.load("imagens/background.png")
+    for i in range(num_paredes):
+        paredes.append(obstaculos.Parede((i+2)*50, 200))
+
 
     cameraX = 0
     cameraY = 0
@@ -51,8 +56,10 @@ def main():
         #Rodar
         relogio.tick(frames)
         pygame.display.update()
-        player.cair(gravidade)
+        player.atualizar_bordas(gravidade)
         player.colisao(largura, altura)
+        for e in paredes:
+            player.colisao_parede(e)
         if(player.motorLigado == True):
             player.voar()
         if(player.direita == True):
@@ -67,6 +74,8 @@ def main():
         tela.fill(cinza)
         tela.blit(plano_fundo, (cameraX, cameraY))
         player.pintar(tela)
+        for e in paredes:
+            e.pintar(tela, cameraX, cameraY)
 
 
 

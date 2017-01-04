@@ -1,5 +1,6 @@
 import pygame
 
+
 #Cores
 branco = (255, 255, 255)
 preto = (0, 0, 0)
@@ -30,7 +31,19 @@ class Nave(pygame.sprite.Sprite):
     def voar(self):
         self.velocidadeY -= self.forcaY
 
-    def cair(self, gravidade):
+    def atualizar_bordas(self, gravidade):
+        self.velocidadeY += gravidade
+        if (self.velocidadeX > -self.arrasto and self.velocidadeX < self.arrasto):
+            self.velocidadeX = 0
+        elif (self.velocidadeX > 0):
+            self.velocidadeX -= self.arrasto
+        elif (self.velocidadeX < 0):
+            self.velocidadeX += self.arrasto
+
+        self.corpo.move_ip(self.velocidadeX, 0)
+        self.corpo.move_ip(0, self.velocidadeY)
+
+    def atualizar_centro(self, gravidade):
         self.velocidadeY += gravidade
         if (self.velocidadeX > -self.arrasto and self.velocidadeX < self.arrasto):
             self.velocidadeX = 0
@@ -48,6 +61,11 @@ class Nave(pygame.sprite.Sprite):
 
     def mover_esquerda(self):
         self.velocidadeX -= self.forcaX
+
+    def colisao_parede(self, parede):
+        if(self.corpo.colliderect(parede.corpo)):
+            print("COLIDINDO!")
+
 
     def colisao(self, largura, altura):
         #Eixo X
